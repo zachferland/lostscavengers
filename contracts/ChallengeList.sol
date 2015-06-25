@@ -1,6 +1,7 @@
 contract ChallengeList {
 
-    address[] public challenges;
+    mapping (uint => address) public challenges;
+    uint public numChallenges;
     mapping (address => bool) public creators;
 
     function ChallengeList() {
@@ -15,7 +16,7 @@ contract ChallengeList {
 
     function addChallenge(address challenge) {
         if (creators[msg.sender]) {
-            challenges[challenges.length] = challenge;
+            challenges[numChallenges++] = challenge;
         }
     }
 }
