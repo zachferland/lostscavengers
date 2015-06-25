@@ -1,19 +1,19 @@
-contract Challange {
+contract Challenge {
 
-    bytes32 public challangeHash;
-    bytes32 public challangeHint;
+    bytes32 public challengeHash;
+    bytes32 public challengeHint;
     address owner;
     address public winner;
     bytes32 public test;
 
-    function setChallange(bytes32 hash, bytes32 hint) {
+    function setChallenge(bytes32 hash, bytes32 hint) {
         owner = msg.sender;
-        challangeHint = hint;
-        challangeHash = hash;
+        challengeHint = hint;
+        challengeHash = hash;
     }
 
     function check(bytes32 password) {
-        if (challangeHash == sha3(password)) {
+        if (challengeHash == sha3(password)) {
             winner = msg.sender;
         }
     }
