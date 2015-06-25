@@ -17,15 +17,26 @@
 
   // Services -------------------------------------------------
 
+
+
+
+
   //LightWallet (don't really have to do this )
   angular.module('application')
     .factory('lw', ['$window', function(window) {
       return window.ethlightjs
   }]);
 
+
+
+
+
+
+
+
   // LightWallet KeyStore
   angular.module('application')
-    .factory('keystore', ['$window', 'lw', function(window, lw) {
+    .factory('keystore', ['$window', '$rootScope', 'lw', function(window, rootScope, lw) {
       var keystore = this
       keystore.initialized = false;
       keystore.instance = undefined;
@@ -34,17 +45,23 @@
 
       keystore.init = function(seed, password) {
         keystore.initalized = true;
+        keystore.password = password
         keystore.instance = new lw.keystore(seed, password)
+        keystore.generateAddressSet(keystore.password)
+
+        // Set addresses globally for testing
+        rootScope.addresses = keystore.instance.getAddresses()
+        rootScope.address = rootScope.addresses[0]
       }
 
       keystore.initHuh = function(){
         return keystore.initialized;
       }
 
-      keystore.saveLocalStorage = function(password) {
+      keystore.saveLocalStorage = function() {
         var serializedLS = keystore.instance.serialize()
         window.localStorage.setItem('keystore', serializedLS)
-        window.localStorage.setItem('password', password)
+        window.localStorage.setItem('password', keystore.password)
       }
 
       keystore.getLocalStorage = function() {
@@ -52,18 +69,68 @@
         var ksObject = lw.keystore.deserialize(serialized)
         keystore.password = window.localStorage.getItem('password')
         keystore.instance = ksObject
+        //Maybe remove this after
+        // keystore.generateAddressSet(keystore.password)
+        // Set addresses globally for testing
+        rootScope.addresses = keystore.instance.getAddresses()
+        rootScope.address = rootScope.addresses[0]
+
         return ksObject
+      }
+
+      keystore.generateAddressSet = function() {
+        var i;
+        for (i = 0; i < 6; i++) {
+          keystore.instance.generateNewAddress(keystore.password)
+        }
+
+        keystore.saveLocalStorage(keystore.password)
       }
 
       return keystore
   }]);
 
 
+
+
+
+
+
+  //LightWallet (don't really have to do this )
+  angular.module('application')
+    .factory('challengeDatum', function() {
+      var challengeDatum = this
+
+      challengeDatum.challenges = {
+        '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'}
+      }
+
+      return challengeDatum
+
+  });
+
+
+
+
+
+
+
   // Modules ------------------------------------------------
+
+  //Index module to allow address selection for testing
+  angular.module('application')
+    .controller('IndexCtrlr', ['$rootScope', '$window', 'keystore', function(scope, window, keystore) {
+
+  }]);
+
 
 
   // Login module
-
   angular.module('application')
     .controller('LoginCtrlr', ['$location', '$window', 'keystore', function(location, window, keystore) {
       var login = this;
@@ -72,7 +139,7 @@
         keystore.init(login.seed, login.password)
 
         //save to local saveLocalStorage
-        keystore.saveLocalStorage(login.password)
+        keystore.saveLocalStorage()
         window.console.log(keystore.instance)
         location.path('/challenges').replace();
       }
@@ -90,22 +157,81 @@
       init()
     }]);
 
+
+
+
+
+
+
+
     // Challenges Controller
     angular.module('application')
-      .controller('ChallengesCtrlr', ['keystore', 'lw', function(keystore, lw) {
+      .controller('ChallengesCtrlr', ["$http", "$location", 'challengeDatum', 'keystore', 'lw', function(http, location, challengeDatum, keystore, lw) {
         var challenges = this;
 
+        challenges.list = challengeDatum.challenges
 
+        challenges.example = undefined
+
+        var init = function() {
+          http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })
+          .success(function(data) {
+            challenges.example = data;
+            // parse , loop through each item and append it to challenges.list
+          })
+        }
+
+        challenges.goTo = function(address){
+          location.path('/challenge/' + address).replace();
+        }
+
+        challenges.create = function() {
+
+        }
+
+        // return list of of individual values
+        // var parse = function(jsonHex) {
+        //   return jsonHex
+        // }
+
+
+        init()
       }]);
 
 
-    // Challenge Controller
+
+
+
+
+
+    // // Challenge Controller
     angular.module('application')
-      .controller('ChallengeCtrlr', ['keystore', 'lw', function(keystore, lw) {
+      .controller('ChallengeCtrlr', ["$http", "$location", '$state', 'challengeDatum', 'keystore', 'lw', function(http, location, state, challengeDatum, keystore, lw) {
+
+        var address = state.params.id;
         var challenge = this;
+        challenge.data = challengeDatum.challenges[address]
+
+        challenge.submitSolution = function() {
+
+          // check if solution is correct
+          http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })
+          .success(function(data) {
+            // if true should congrats message update winner
+            challenge.solutionMessage = "You got it"
+
+            // if false try again message
+            challenge.solutionMessage = "You did not get it"
+          })
+        }
+
+    }]);
 
 
-      }]);
+
+
+
+
 
 
 

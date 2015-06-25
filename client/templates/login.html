@@ -1,14 +1,20 @@
 ---
-name: home
-url: /
+name: login
+url: /login
+animationIn: slideInLeft
 ---
 
 <div class="grid-container">
 
-<div ng-controller="IndexCtrlr as login">
-  <h2>This home page now</h2>
-  [ <a href="/#!/login">Login</a> ]
-
+<div ng-controller="LoginCtrlr as login">
+  <h2>Login</h2>
+  <form ng-submit="login.createKeyStore()">
+    <input type="text" ng-model="login.seed"  size="30"
+           placeholder="Enter Seed">
+    <input type="text" ng-model="login.password"  size="30"
+           placeholder="Enter Password">
+    <input class="btn-primary" type="submit" value="Enter">
+  </form>
 </div>
 </div>
 

@@ -1,8 +1,22 @@
 ---
 name: challenge
 url: /challenge/:id
-controller: ChallengeCtrlr
+animationIn: slideInLeft
 ---
 
+<div class="grid-container">
+  <h1>  This is a single challenge  </h1>
+  {{$state.params.id}}
+  <div ng-controller="ChallengeCtrlr as challenge">
+    <h2 >{{challenge.data.title}}</h2>
+    <p>{{challenge.data.description}}</p>
+    <p>{{challenge.data.winner}}</p>
+    <p>{{challenge.data.date}}</p>
+  </div>
 
-<h1>  This is a single challenge  </h1>
+  <form ng-submit="challenge.submitSolution()">
+    <input type="text" ng-model="challenge.solution"  size="30"
+           placeholder="Enter Solution">
+    <input class="btn-primary" type="submit" value="Enter">
+  </form>
+</div>

@@ -18,7 +18,10 @@
     <div class="grid-frame vertical">
       <div class="grid-content shrink" style="padding: 0;">
         <ul class="primary condense menu-bar">
-          <li><a><strong>Lost Scavenger</strong></a></li>
+          <!-- Actually add link to home -->
+          <li><a href="/index"><strong>Lost Scavenger</strong></a></li>
+          <li><a><strong>Choose Identiy</strong></a></li>
+          <select style="width:400px" data-ng-options="address for address in addresses" data-ng-model="address"></select>
         </ul>
       </div>
       <div ui-view class="grid-content">
