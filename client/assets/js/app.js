@@ -314,6 +314,10 @@
             })
         }
 
+        challenge._hexstrToStr = function(hex) {
+            return CryptoJS.enc.Hex.parse(hex).toString(CryptoJS.enc.Utf8).replace(/\u0000/g, "")
+        }
+
     }]);
 
 
