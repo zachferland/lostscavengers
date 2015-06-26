@@ -188,7 +188,7 @@
         var init = function() {
 
           // Get address of every challenge contract from registry contract
-          challenges.address = '36f07edb71fac9079d403015c712dc76e44d2895'
+          challenges.address = '66233da500a04ab480d563dd226d41be7e89ca4a'
           http.get('http://stablenet.blockapps.net/query/storage?address=' + challenges.address, {cache: false })
           .success(function(data) {
             challenges.example = data
