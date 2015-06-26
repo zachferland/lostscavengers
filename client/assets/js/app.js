@@ -189,7 +189,7 @@
 
           // Get address of every challenge contract from registry contract
           challenges.address = '36f07edb71fac9079d403015c712dc76e44d2895'
-          http.get('http://stablenet.blockapps.net/query/storage?address=' + challenges.address, {cache: true })
+          http.get('http://stablenet.blockapps.net/query/storage?address=' + challenges.address, {cache: false })
           .success(function(data) {
             challenges.example = data
 
@@ -202,7 +202,7 @@
 
             // Now get data for every challenge
             challenges.addressList.forEach(function(address) {
-              http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
+              http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: false })
               .success(function(data) {
 
                 window.console.log(data)
@@ -311,13 +311,16 @@
 
     // // Challenge Controller
     angular.module('application')
-      .controller('ChallengeCtrlr', ["$http", "$location", '$state', 'challengeDatum', 'keystore', 'lw', 'abi', function(http, location, state, challengeDatum, keystore, lw, abi) {
+      .controller('ChallengeCtrlr', ["$http", "$location", '$rootScope', '$window', '$state', 'challengeDatum', 'keystore', 'lw', 'abi', 'api', function(http, location, rootScope, window, state, challengeDatum, keystore, lw, abi, api) {
 
         var address = state.params.id;
         var challenge = this;
         challenge.data = challengeDatum.challenges[address]
 
+        window.console.log("yo")
+
         challenge.submitSolution = function() {
+          window.console.log("yo")
 
           challenge._submitAnswer(address, challenge.solution)
 
@@ -333,13 +336,15 @@
         }
 
         challenge._submitAnswer = function(contractAddress, pw) {
-            api.getNonce(address, function(_, nonce) {
+            window.console.log(contractAddress + " " + pw)
+            api.getNonce(rootScope.address, function(_, nonce) {
+              window.console.log(nonce)
                 lw.helpers.sendFunctionTx(abi.challenge,
                       contractAddress,
                       "check", [pw],
                       rootScope.address, { "nonce": nonce },
                       api, keystore.instance, keystore.password,
-                      function(err, data) { console.log(err, data) })
+                      function(err, data) { window.console.log(err, data) })
             })
         }
 
