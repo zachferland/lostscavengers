@@ -4,19 +4,33 @@ url: /challenge/:id
 animationIn: slideInLeft
 ---
 
-<div class="grid-container">
-  <h1>  This is a single challenge  </h1>
-  {{$state.params.id}}
-  <div ng-controller="ChallengeCtrlr as challenge">
-    <h2 >{{challenge.data.title}}</h2>
-    <p>{{challenge.data.description}}</p>
+
+
+<div class="challenge" ng-controller="ChallengeCtrlr as challenge">
+  <div class="map_canvas">
+    <!-- map.center -->
+    <!-- "{latitude: '40.656936', longitude: '-73.895685'}" -->
+    <ui-gmap-google-map center="challenge.data.coords" zoom="17" draggable="true" options="options">
+        <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
+        <ui-gmap-marker coords="challenge.data.coords" idkey="$state.params.id"></ui-gmap-marker>
+        <!-- </div> -->
+      </ui-gmap-google-map>
+  </div>
+
+  <div class="grid-container row">
+
+    <h2 class='title'>{{challenge.data.title}}</h2>
+    <p class='description'>{{challenge.data.description}}</p>
     <p>{{challenge.data.winner}}</p>
     <p>{{challenge.data.date}}</p>
 
-    <form ng-submit="challenge.submitSolution()">
+    <div class="large-8">
 
-      <input type="text" ng-model="challenge.solution"  size="30" placeholder="Enter Solution">
-      <input class="btn-primary" type="submit" value="Enter">
-    </form>
+      <form ng-submit="challenge.submitSolution()">
+
+        <input type="text" ng-model="challenge.solution"  size="30" placeholder="Enter Solution">
+        <input class="btn-primary" type="submit" value="Enter">
+      </form>
+    </div>
   </div>
-</div>
+  </div>

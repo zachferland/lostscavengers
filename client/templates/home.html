@@ -12,37 +12,46 @@ url: /
 </div>
 </div> -->
 
-<div class="homepage">
+<div class="homepage"  ng-controller="IndexCtrlr as index">
 
-<div id="header-fixed"></div>
+  <div id="header-fixed"></div>
 
-<div class="highlight"></div>
+  <div class="highlight"></div>
 
 <!-- INTRO SECTION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<div class="main-bg">
+  <div class="main-bg">
 
 
-<div class="intro ng-row">
-  <div class="ng-large-8 ng-small-12 ng-columns ng-small-centered">
-  	<h1 class="title-top">LOST SCAVENGERS</h1>
+    <div class="intro grid-content">
+
+      <div class="row">
+      <div class="large-10 small-12 small-centered columns" style='padding-left: 70px;'>
+  	     <h1 class="title-top">LOST SCAVENGERS</h1>
+       </div>
+     </div>
+
+       <div class="row">
+       <div class="large-9 small-12 small-centered columns" style='padding-left: 120px;'>
+  	      <h2 class="what"> Place physical challenges around the city in the form of passwords, messages, and riddles. Find these physical pieces allow you to unlock tokens, decrypt messages and access other contract functionality</h2>
+      </div>
+      </div>
+
+      <!-- <div class="large-8 small-12 columns small-centered"> -->
+      <div class="row">
+        <div class="large-9 small-12 small-centered columns" style='padding-left: 290px;'>
+            <form ng-submit="index.login()">
+    	       <input id="button-email" type="submit" class="btn" value="Login"/>
+	         </form>
+        </div>
+      </div>
+
+
+
+	   <!-- <div class="down-arrow small-1 columns small-centered hide-for-small-only"></div>
+    </div> -->
+    </div>
+
+
   </div>
-  <div class="large-9 small-12 columns small-centered">
-  	<h2 class="what">A weekly newsletter of the most important Bitcoin news, content and developments. Sourced from blogs, individuals, communities and other resources. It provides an easy way to follow Bitcoin, understand its underlying protocol, and to discover further resources. </h2>
-  </div>
-  <div class="large-8 small-12 columns small-centered">
-
-	<!-- <form action="/subscribe" method="post" class="form-inline">
-		<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-    	<span class="email-icon"></span>
-    	<input id="email-input" type="email" name="email" placeholder="email address"/>
-    	<input id="button-email" type="submit" class="btn" value="SIGN UP"/>
-	</form> -->
-
-	<div class="down-arrow small-1 columns small-centered hide-for-small-only"></div>
-  </div>
-</div>
-
-
-</div>
 </div>

@@ -135,7 +135,15 @@
 
   //Index module to allow address selection for testing
   angular.module('application')
-    .controller('IndexCtrlr', ['$rootScope', '$window', 'keystore', function(scope, window, keystore) {
+    .controller('IndexCtrlr', ['$location', '$rootScope', '$window', 'keystore', function(location, scope, window, keystore) {
+      var index = this
+
+      index.login = function () {
+        location.path('/login').replace();
+      }
+
+
+      // <form ng-submit="index.login()">
 
   }]);
 
@@ -186,6 +194,23 @@
         rootScope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
 
         var init = function() {
+
+
+          // Create Map
+          rootScope.map = {
+            center: {
+              latitude: 40.7157774,
+              longitude: -73.961849
+            },
+            zoom: 14,
+            events: {
+              click: function(mapModel, eventName, originalEventArgs) {
+                rootScope.map.lat = originalEventArgs[0].latLng.A
+                rootScope.map.long = originalEventArgs[0].latLng.F
+              }
+            }
+
+          };
 
           // Get address of every challenge contract from registry contract
           challenges.address = '66233da500a04ab480d563dd226d41be7e89ca4a'
@@ -250,8 +275,8 @@
                     challenges._setChallenge(++nonce, addr, hash,
                                              challenges.new.title,
                                              challenges.new.hint,
-                                             challenges.new.lat,
-                                             challenges.new.lng,
+                                             rootScope.map.lat.toString(),
+                                             rootScope.map.long.toString(),
                                              function() {
                       challenges._addChallenge(++nonce, addr)
                     })
