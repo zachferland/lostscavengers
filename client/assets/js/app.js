@@ -186,8 +186,8 @@
         var init = function() {
 
           // Get address of every challenge contract from registry contract
-          var address = '70e89ffe227dc02db70024b29ad7e16a00111ff9'
-          http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
+          challenges.address = '70e89ffe227dc02db70024b29ad7e16a00111ff9'
+          http.get('http://stablenet.blockapps.net/query/storage?address=' + challenges.address, {cache: true })
           .success(function(data) {
             challenges.example = data
 
@@ -255,6 +255,15 @@
                   "setChallenge", [hash, hint],
                   rootScope.address, { "nonce": nonce }, api,
                   keystore.instance, keystore.password,
+                  function(err, data) { console.log(err, data) })
+        }
+
+        callenges._addChallenge = function (nonce, challengeAddress) {
+            this.lw.helpers.sendFunctionTx(abi.challengeList,
+                  challenges.address,
+                  "addChallenge", ["0x" + challengeAddress],
+                  rootScope.address, { "nonce": nonce },
+                  api, keystore.instance, keystore.password,
                   function(err, data) { console.log(err, data) })
         }
 
