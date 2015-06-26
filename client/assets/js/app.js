@@ -215,9 +215,10 @@
                 //  '99de3950a971bb26461477e333e75fdca7f44d34':
                 // parse here and a
                 challengeDatum.challenges[address] = {title: challenges._hexstrToStr(data[1].value),
-                description: "There exists and a place with not light and a message",
+                description: challenges._hexstrToStr(data[2].value),
                 winner: winner,
-                coords: {latitude: '40.626936', longitude: '-73.865685'},
+                coords: {latitude: challenges._hexstrToStr(data[3].value),
+                        longitude: challenges._hexstrToStr(data[4].value)},
                 date: '6/25/15'}
 
                 // challenges.list = challengeDatum.challenges
