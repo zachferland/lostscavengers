@@ -55,4 +55,8 @@ test.prototype.hash = function(str) {
     return CryptoJS.SHA3(wordArray, { outputLength: 256 }).toString(CryptoJS.enc.Latin1)
 }
 
+test.prototype.hexstrToStr = function(hex) {
+    return CryptoJS.enc.Hex.parse(hex).toString(CryptoJS.enc.Utf8).replace(/\u0000/g, "")
+}
+
 module.exports = test;
