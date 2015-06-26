@@ -208,8 +208,8 @@
                 window.console.log(data)
 
                 var winner = 'none'
-                if (data[2].key.slice(-1) === 2) {
-                  winner = data[2].value.substring(24)
+                if (data[3]) {
+                  winner = data[3].value.substring(24)
                 }
 
                 //  '99de3950a971bb26461477e333e75fdca7f44d34':
@@ -221,7 +221,6 @@
                 date: '6/25/15'}
 
                 // challenges.list = challengeDatum.challenges
-
               });
 
             });
@@ -239,12 +238,17 @@
           location.path('/challenge/' + address).replace();
         }
 
-        challenges.create = function(name, hint, password) {
+        challenges.create = function() {
+            window.console.log('hello')
+            // window.console.log(rootScope.address)
             api.getNonce(rootScope.address, function(_, nonce) {
+                window.console.log(nonce)
                 challenges._createContract(nonce, function(err, addr) {
-                    var hash = challenges._sha3(password)
-                    challenges._setChallenge(++nonce, addr, hash, hint)
-                    console.log("Contract address: " + addr)
+                    var hash = challenges._sha3(challenges.new.key)
+                    window.console.log("Contract address: " + addr + " " + hash)
+                    challenges._setChallenge(++nonce, addr, hash, challenges.new.title, function() {
+                      challenges._addChallenge(++nonce, addr)
+                    })
                 })
             })
             // TODO - add to challengeList
@@ -267,17 +271,18 @@
                 callback)
         }
 
-        challenges._setChallenge = function (nonce, contractAddress, hash, hint) {
+        challenges._setChallenge = function (nonce, contractAddress, hash, hint, callback) {
+            window.console.log("hash: " + hash + " hint: " + hint)
             lw.helpers.sendFunctionTx(abi.challenge,
                   contractAddress,
                   "setChallenge", [hash, hint],
                   rootScope.address, { "nonce": nonce }, api,
                   keystore.instance, keystore.password,
-                  function(err, data) { console.log(err, data) })
+                  callback)
         }
 
         challenges._addChallenge = function (nonce, challengeAddress) {
-            this.lw.helpers.sendFunctionTx(abi.challengeList,
+            lw.helpers.sendFunctionTx(abi.challengeList,
                   challenges.address,
                   "addChallenge", ["0x" + challengeAddress],
                   rootScope.address, { "nonce": nonce },
@@ -314,19 +319,21 @@
 
         challenge.submitSolution = function() {
 
-          // check if solution is correct
-          http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })
-          .success(function(data) {
-            // if true should congrats message update winner
-            challenge.solutionMessage = "You got it"
+          challenge._submitAnswer(address, challenge.solution)
 
-            // if false try again message
-            challenge.solutionMessage = "You did not get it"
-          })
+          // check if solution is correct
+          // http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })
+          // .success(function(data) {
+          //   // if true should congrats message update winner
+          //   challenge.solutionMessage = "You got it"
+          //
+          //   // if false try again message
+          //   challenge.solutionMessage = "You did not get it"
+          // })
         }
 
         challenge._submitAnswer = function(contractAddress, pw) {
-            api.getNonce(this.address, function(_, nonce) {
+            api.getNonce(address, function(_, nonce) {
                 lw.helpers.sendFunctionTx(abi.challenge,
                       contractAddress,
                       "check", [pw],
