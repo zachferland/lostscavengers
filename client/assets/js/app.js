@@ -4,6 +4,7 @@
   angular.module('application', [
     'ui.router',
     'ngAnimate',
+    'uiGmapgoogle-maps',
 
     //foundation
     'foundation',
@@ -102,12 +103,12 @@
       var challengeDatum = this
 
       challengeDatum.challenges = {
-        '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, latitude: 40.716936, longitude: -73.965685, date: '6/25/15'}
+        '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.626936', longitude: '-73.865685'}, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.736936', longitude: '-73.965685'}, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.616936', longitude: '-73.845685'}, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.716936', longitude: '-73.975685'}, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.636936', longitude: '-73.855685'}, date: '6/25/15'},
+        '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.726936', longitude: '-73.955685'}, date: '6/25/15'}
       }
 
       return challengeDatum
@@ -166,12 +167,12 @@
 
     // Challenges Controller
     angular.module('application')
-      .controller('ChallengesCtrlr', ["$http", "$location", 'challengeDatum', 'keystore', 'lw', function(http, location, challengeDatum, keystore, lw) {
+      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', function(http, rootScope, location, challengeDatum, keystore, lw) {
         var challenges = this;
-
         challenges.list = challengeDatum.challenges
-
         challenges.example = undefined
+
+        rootScope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
 
         var init = function() {
           http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })

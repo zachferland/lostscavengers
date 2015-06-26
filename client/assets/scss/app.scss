@@ -1,2 +1,505 @@
 @import "settings";
 @import "foundation";
+
+
+.angular-google-map-container { height: 300px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #############################################################################
+//  HOME PAGE ------------------------------------------------------------------
+// #############################################################################
+
+.homepage {
+.highlight {
+	background: image-url("highlight.png") repeat;
+	width: 100%;
+	height: 14px;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    z-index: 1002;
+    border-top: 0;
+}
+
+#header-fixed {
+	background-color: #3a0d72;
+	background: image-url("bg-fixed.png") repeat center top fixed;
+	position: fixed;
+    height: 0px;
+    top: 0;
+    margin: auto;
+    width: 100%;
+    z-index: 1000;
+    display: block;
+    opacity: 0.0;
+    max-height: 80px;
+}
+
+.main-bg {
+	background:url(../images/bg-space.png) repeat center top fixed;
+	// min-height: 2255px;
+}
+
+#notice {
+	background: image-url("highlight.png") repeat center top fixed;
+	height: 38px;
+	text-align: center;
+	color: #FFF;
+	width: 100%;
+	padding-top: 16px;
+	font-weight: 300;
+	letter-spacing: 1px;
+}
+
+.share-box {
+	float: right;
+	height: 70px;
+	padding-right: 5px;
+	padding-top: 20px;
+
+	.bitcoin {
+		.COINWIDGETCOM_CONTAINER > a, .COINWIDGETCOM_CONTAINER > span {
+			-webkit-box-sizing: content-box;
+			box-sizing: content-box;
+		}
+	}
+
+	.share {
+		float: left;
+		// padding-right: 20px;
+	}
+
+	.bitcoin, .facebook {
+		padding-right: 20px;
+	}
+}
+
+// INTRO SECTION ---------------------------------------------------------------
+.intro {
+	h1 {
+		font-size: 67px;
+		text-align: center;
+		margin-top: 140px;
+		padding: 10px 20px;
+		border: 6px solid #fff;
+		font-weight: 500;
+	}
+
+	h2 {
+		font-size: 16px;
+		margin: 64px 15px;
+		text-align: center;
+		margin-bottom: 70px;
+		font-weight: 400;
+		line-height: 26px;
+	}
+
+	form {
+		display: block;
+		margin: 20px auto 0 auto;
+		min-height: 45px;
+
+		.email-icon {
+			float: left;
+			background: image-url("email-icon.png") no-repeat center center;
+			height: 38px;
+			background-color: #FFF;
+			width: 50px;
+			border: none;
+		}
+
+		#email-input {
+			width: 410px;
+			float: left;
+			height: 38px;
+			padding-left: 20px;
+			webkit-box-shadow: none;
+			box-shadow: none;
+			border: none;
+			color: #4a4a4a;
+			font-weight: 400;
+		}
+
+		#button-email {
+			width: 175px;
+			height: 38px;
+			background: image-url("highlight.png") repeat;
+			font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+			border: none;
+			color: #fff;
+			text-align: center;
+			font-size: 15px;
+			letter-spacing: 1.5px;
+			-webkit-font-smoothing: antialiased;
+			cursor: pointer;
+
+			:hover {
+
+			}
+		}
+	}
+
+	.join-others {
+		margin-left: 15px;
+		font-size: 14px;
+		margin-top: 10px;
+
+		.count {
+			font-weight: bold;
+			font-size: 16px;
+		}
+	}
+
+	.down-arrow {
+		background: image-url("down-arrow.png") no-repeat center top;
+		width: 28px;
+		height: 20px;
+		margin-top: 90px; //120
+		cursor: pointer;
+	}
+}
+
+// NEWSLETTER SECTION ----------------------------------------------------------
+.newsletter {
+
+	margin-top: 150px; //135
+
+	.lastweek{
+		font-size: 20px;
+		text-align: center;
+	}
+
+	.email {
+		margin-top: 35px;
+		background-color: #FFF;
+		min-height: 1000px;
+		padding: 0;
+		max-width: 600px;
+
+		.header {
+			background: image-url("email-header.png") no-repeat center top;
+			height: 287px;
+		}
+
+		.date, .price {
+			font-size: 15px;
+			padding: 15px;
+			font-weight: 500;
+		}
+
+		.date {
+			float: left;
+		}
+
+		.price {
+			float: right;
+		}
+
+		.title {
+			font-size: 43px;
+			text-align: center;
+			border: 4px solid #fff;
+			font-weight: 500;
+			margin-top: 37px;
+		}
+
+		.body {
+			padding: 30px 40px 56px 40px;
+			.article {
+				padding: 10px 0;
+				.title {
+					color: #28236b;
+					font-size: 19px;
+					text-align: left;
+					font-weight: 800;
+				}
+
+				.summary {
+					font-size: 17px;
+					color: #7b7b7b;
+					text-indent: 25px;
+				}
+
+				.read-button {
+					width: 125px;
+					height: 37px;
+					background: image-url("highlight.png") repeat;
+					cursor: pointer;
+
+					span {
+						text-align: center;
+						color: #FFF;
+						font-size: 15px;
+						padding-top: 11px;
+						font-weight: 200;
+						display: block;
+						letter-spacing: 1.5px;
+						font-weight: 400;
+
+					}
+				}
+			}
+		}
+	}
+}
+
+// PURPOSE SECTION -------------------------------------------------------------
+.purpose {
+		background: url(../images/bg-network-2-52112bf1ac7173aae8d672ca30f77785.png) repeat center top;
+		height: auto;
+		min-height: 651px;
+
+		h3, h4 {
+			text-align: center;
+		}
+
+		h3 {
+			margin-top: 138px;
+			font-size: 37px;
+			font-weight: 700;
+		}
+
+		h4 {
+			margin-top: 40px;
+			font-size: 21px;
+			padding-bottom: 50px;
+		}
+
+
+}
+
+// OTHER SECTION ---------------------------------------------------------------
+.other {
+	min-height: 770px;
+	background-color: #FFF;
+
+	.row {
+		h3 {
+			font-size: 29px;
+			color: #404e4b;
+			font-weight: 800;
+			text-align: left;
+			margin-top: 150px;
+			margin-bottom: 25px;
+		}
+
+		p {
+			color: #697471;
+			font-size: 23px;
+		}
+		.contributors {
+			padding: 0 40px 0 0;
+
+			.looking-for {
+				margin-top: 75px;
+				font-size: 18px;
+			}
+
+			.button-contact {
+				width: 155px;
+				height: 39px;
+				background: image-url("highlight.png") repeat;
+				float: left;
+				cursor: pointer;
+
+				span {
+					text-align: center;
+					color: #FFF;
+					font-size: 16px;
+					padding-top: 12px;
+					font-weight: 400;
+					display: block;
+					letter-spacing: 1.5px;
+				}
+			}
+		}
+
+		.sources {
+			padding-left: 75px;
+
+		}
+		.background {
+			position: absolute;
+			width: 125px;
+
+			div {
+				position: absolute;
+				background: image-url("bg-grey-with-logo.png") 100% 0% no-repeat;
+				right: 0;
+				height: 770px;
+				width: 1180px;
+				margin: 0;
+
+			}
+		}
+	}
+
+
+
+
+}
+
+// FOOTER SECTION --------------------------------------------------------------
+.footer {
+	min-height: 298px;
+	background: image-url("bg-footer.png") repeat center top;
+	.row {
+		padding-top: 190px;
+
+		ul {
+			list-style-type: none;
+			color: #fff;
+			font-weight: 100;
+			font-size: 16px;
+			letter-spacing: 2px;
+			float: left;
+			margin-top: 32px;
+
+			li {
+				display: inline;
+				padding-right: 50px;
+
+				a {
+					color: #fff;
+					padding-bottom: 10px;
+
+					 &:hover {
+						border-bottom: 1px solid #fff;
+					}
+				}
+			}
+		}
+
+		.built-in-boston {
+			float: right;
+			height: 74px;
+			width: 322px;
+			margin: 0;
+		}
+	}
+
+}
+
+// MOBILE FIRST ASPECTS
+
+@media only screen and (max-width: 40em) {
+	.intro {
+
+		h1 {
+			margin-top: 70px;
+			font-size: 45px;
+			width: 80%;
+			margin: 70px auto 0 auto;
+		}
+		form {
+			margin-top: 50px;
+			#email-input {
+				width: 82%;
+			}
+			#button-email {
+				width: 100%;
+			}
+		}
+	}
+
+	.newsletter {
+		margin-top: 70px;
+
+		.email {
+			.title {
+				font-size: 34px;
+			}
+
+			.body {
+				padding: 30px 7%;
+			}
+		}
+	}
+
+	.purpose {
+		h3 {
+			margin-top: 60px;
+		}
+	}
+
+	.other {
+		.row {
+			h3 {
+				margin-top: 80px;
+			}
+			.contributors {
+				padding: 0 9%;
+				.looking-for {
+					margin-top: 70px;
+				}
+			}
+
+			.sources {
+				padding: 0 7%;
+				margin-bottom: 70px;
+			}
+			.background {
+				position: absolute;
+				width: 0px;
+			}
+		}
+	}
+
+	.footer {
+		.row {
+			padding-top: 20px;
+
+			ul {
+				margin-bottom: 60px;
+				float: none;
+
+				li {
+					text-align: center;
+					display: block;
+					padding: 0;
+					margin-bottom: 14px;
+				}
+			}
+			.built-in-boston {
+				max-width: 70%;
+				margin: 0 15%;
+				float: left;
+				margin-bottom: 20px;
+			}
+		}
+	}
+
+
+ }
+
+
+
+h1, h2, h3, h4, h5, h6, p, span, input {
+	color: #fff;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+
+}

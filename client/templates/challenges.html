@@ -7,6 +7,10 @@ url: /challenges
 <h1>  This is a list of challenges  </h1>
 
   <div ng-controller="ChallengesCtrlr as challenges">
+
+    <div class="addChallenge">
+
+    </div>
     <h3>Create new challenge</h3>
     <form ng-submit="challenge.create()">
       <input type="text" ng-model="challenges.new.title"  size="30" placeholder="Enter title">
@@ -22,6 +26,14 @@ url: /challenges
 
 
 
+
+      <div id="map_canvas">
+      <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
+          <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
+            <ui-gmap-marker ng-repeat="(key, challenge) in challenges.list" coords="challenge.coords" idkey="key"></ui-gmap-marker>
+          <!-- </div> -->
+      </ui-gmap-google-map>
+    </div>
 
 
 

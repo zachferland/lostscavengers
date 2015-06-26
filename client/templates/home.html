@@ -3,31 +3,46 @@ name: home
 url: /
 ---
 
-<div class="grid-container">
+<!-- <div class="grid-container">
 
 <div ng-controller="IndexCtrlr as login">
   <h2>This home page now</h2>
   [ <a href="/#!/login">Login</a> ]
 
 </div>
+</div> -->
+
+<div class="homepage">
+
+<div id="header-fixed"></div>
+
+<div class="highlight"></div>
+
+<!-- INTRO SECTION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div class="main-bg">
+
+
+<div class="intro ng-row">
+  <div class="ng-large-8 ng-small-12 ng-columns ng-small-centered">
+  	<h1 class="title-top">LOST SCAVENGERS</h1>
+  </div>
+  <div class="large-9 small-12 columns small-centered">
+  	<h2 class="what">A weekly newsletter of the most important Bitcoin news, content and developments. Sourced from blogs, individuals, communities and other resources. It provides an easy way to follow Bitcoin, understand its underlying protocol, and to discover further resources. </h2>
+  </div>
+  <div class="large-8 small-12 columns small-centered">
+
+	<!-- <form action="/subscribe" method="post" class="form-inline">
+		<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+    	<span class="email-icon"></span>
+    	<input id="email-input" type="email" name="email" placeholder="email address"/>
+    	<input id="button-email" type="submit" class="btn" value="SIGN UP"/>
+	</form> -->
+
+	<div class="down-arrow small-1 columns small-centered hide-for-small-only"></div>
+  </div>
 </div>
 
 
-
-
-<!-- <h2>Todo</h2>
-    <div ng-controller="TodoListController as todoList">
-      <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
-      [ <a href="" ng-click="todoList.archive()">archive</a> ]
-      <ul class="unstyled">
-        <li ng-repeat="todo in todoList.todos">
-          <input type="checkbox" ng-model="todo.done">
-          <span class="done-{{todo.done}}">{{todo.text}}</span>
-        </li>
-      </ul>
-      <form ng-submit="todoList.addTodo()">
-        <input type="text" ng-model="todoList.todoText"  size="30"
-               placeholder="add new todo here">
-        <input class="btn-primary" type="submit" value="add">
-      </form>
-    </div> -->
+</div>
+</div>
