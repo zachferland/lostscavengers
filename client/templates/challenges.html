@@ -3,52 +3,57 @@ name: challenges
 url: /challenges
 ---
 
-<div class="grid-container">
-<h1>  This is a list of challenges  </h1>
+<div class="challenges">
+  <h1>  This is a list of challenges  </h1>
 
   <div ng-controller="ChallengesCtrlr as challenges">
 
-    <div class="addChallenge">
+    <div class="sidebar">
+      <div class="addChallenge">
+
+        <h3>Create new challenge</h3>
+        <form ng-submit="challenge.create()">
+          <input type="text" ng-model="challenges.new.title"  size="30" placeholder="Enter title">
+          <input type="text" ng-model="challenges.new.description"  size="30" placeholder="Enter description or hint">
+          <input type="text" ng-model="challenges.new.key"  size="30" placeholder="Enter your secret key">
+          <input type="text" ng-model="challenges.new.message"  size="30" placeholder="Enter your secret message">
+          <!--Ideally choose you location on a map  -->
+          <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter Long">
+          <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter lat">
+          <!--autotmatically append date when it is sent  -->
+          <input class="btn-primary" type="submit" value="Create">
+        </form>
+      </div>
+
+      <p>
+        {{challenges.example}}
+      </p>
+
+      <div ng-repeat="(key, challenge) in challenges.list" class="item">
+        <h3 >{{challenge.title}}</h3>
+        <p>{{challenge.description}}</p>
+        <p>{{challenge.winner}}</p>
+        <p>{{challenge.date}}</p>
+        <!-- Address is the key -->
+        [ <a href="" ng-click="challenges.goTo(key)">View Challenge</a> ]
+      </div>
 
     </div>
-    <h3>Create new challenge</h3>
-    <form ng-submit="challenge.create()">
-      <input type="text" ng-model="challenges.new.title"  size="30" placeholder="Enter title">
-      <input type="text" ng-model="challenges.new.description"  size="30" placeholder="Enter description or hint">
-      <input type="text" ng-model="challenges.new.key"  size="30" placeholder="Enter your secret key">
-      <input type="text" ng-model="challenges.new.message"  size="30" placeholder="Enter your secret message">
-      <!--Ideally choose you location on a map  -->
-      <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter Long">
-      <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter lat">
-      <!--autotmatically append date when it is sent  -->
-      <input class="btn-primary" type="submit" value="Create">
-    </form>
 
 
 
 
-      <div id="map_canvas">
-      <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
-          <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
+    <div class="right">
+      <div class="map_canvas">
+        <!-- map.center -->
+        <ui-gmap-google-map center="{latitude: '40.726936', longitude: '-73.895685'}" zoom="11" draggable="true" options="options">
+            <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
             <ui-gmap-marker ng-repeat="(key, challenge) in challenges.list" coords="challenge.coords" idkey="key"></ui-gmap-marker>
-          <!-- </div> -->
-      </ui-gmap-google-map>
+            <!-- </div> -->
+          </ui-gmap-google-map>
+      </div>
     </div>
 
-
-
-    <p>
-      {{challenges.example}}
-    </p>
-
-    <div ng-repeat="(key, challenge) in challenges.list">
-      <h2 >{{challenge.title}}</h2>
-      <p>{{challenge.description}}</p>
-      <p>{{challenge.winner}}</p>
-      <p>{{challenge.date}}</p>
-      <!-- Address is the key -->
-      [ <a href="" ng-click="challenges.goTo(key)">View Challenge</a> ]
-    </div>
 
   </div>
 </div>

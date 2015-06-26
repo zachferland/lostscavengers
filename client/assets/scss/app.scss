@@ -2,10 +2,37 @@
 @import "foundation";
 
 
-.angular-google-map-container { height: 300px; }
 
 
+.challenges {
+  .right {
+    width: 40%;
+    // float: left;
+    display: block;
+    position: fixed;
+    right: 0;
+    left: auto;
+    bottom: 0;
 
+    .angular-google-map-container {
+      height: 673px;
+    }
+
+    .map_canvas {
+      height: 100%;
+    }
+  }
+
+  .sidebar {
+    width: 60%;
+    float: left;
+    display: block;
+
+    .item {
+      
+    }
+  }
+}
 
 
 

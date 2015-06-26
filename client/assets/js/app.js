@@ -20,8 +20,6 @@
 
 
 
-
-
   //LightWallet (don't really have to do this )
   angular.module('application')
     .factory('lw', ['$window', function(window) {
@@ -29,14 +27,11 @@
   }]);
 
 
-
   //api
   angular.module('application')
-    .factory('api', ['$window', 'lw' function(window, lw) {
-      return new lw.blockappsapi.blockappsapi()
+    .factory('api', ['$window', 'lw', function(window, lw) {
+      return new lw.blockchainapi.blockappsapi()
   }]);
-
-
 
 
   // LightWallet KeyStore
@@ -175,15 +170,42 @@
         var challenges = this;
         challenges.list = challengeDatum.challenges
         challenges.example = undefined
+        challenges.addressList = []
 
         rootScope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
 
         var init = function() {
-          http.get('http://stablenet.blockapps.net/query/storage?address=99de3950a971bb26461477e333e75fdca7f44d34', {cache: true })
+
+          // Get address of every challenge contract from registry contract
+          var address = '70e89ffe227dc02db70024b29ad7e16a00111ff9'
+          http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
           .success(function(data) {
-            challenges.example = data;
-            // parse , loop through each item and append it to challenges.list
+            challenges.example = data
+
+            data.forEach(function(entry) {
+              if (entry.value !== "0000000000000000000000000000000000000000000000000000000000000001"){
+                // address last 40 char of 64 char string
+                challenges.addressList.push(entry.value.substring(24))
+              }
+            });
+
+            // Now get data for every challenge
+            // challenges.addressList.forEach(function(address) {
+            //   http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
+            //   .success(function(data) {
+            //     // parse here and a
+            //
+            //   });
+            //
+            // });
+            //
+            // challenges.example = challenges.addressList
+
           })
+
+
+
+
         }
 
         challenges.goTo = function(address){
@@ -192,7 +214,7 @@
 
         challenges.create = function(name, hint, password) {
             api.getNonce(rootScope.address, function(_, nonce) {
-                challenges._createContract(nonce, function(_, addr) {
+                challenges._createContract(nonce, function(err, addr) {
                     var hash = challenges._sha3(password)
                     challenges._setChallenge(++nonce, addr, hash, hint)
                     console.log("Contract address: " + addr)
@@ -209,7 +231,7 @@
             return CryptoJS.SHA3(wordArray, { outputLength: 256 }).toString(CryptoJS.enc.Latin1)
         }
 
-        challenge._createContract = function(nonce, callback) {
+        challenges._createContract = function(nonce, callback) {
             lw.helpers.sendCreateContractTx("60606040525b33600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b6101e6806100406000396000f30060606040526000357c010000000000000000000000000000000000000000000000000000000090048063399e0792146100655780633f696821146100785780635b8b22801461008d578063789237c1146100a2578063dfbf53ae146100bb57610063565b005b61007660048035906020015061018e565b005b6100836004506100e6565b8060005260206000f35b6100986004506100ef565b8060005260206000f35b6100b960048035906020018035906020015061011e565b005b6100c66004506100f8565b8073ffffffffffffffffffffffffffffffffffffffff1660005260206000f35b60016000505481565b60006000505481565b600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156101895781600060005081905550806001600050819055505b5b5050565b60008160405180828152602001915050604051809103902090508060006000505414156101e15733600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b5b505056",
                 rootScope.address,
                 {"nonce": nonce}, api,
@@ -217,7 +239,7 @@
                 callback)
         }
 
-        challenge._setChallenge = function (nonce, contractAddress, hash, hint) {
+        challenges._setChallenge = function (nonce, contractAddress, hash, hint) {
             lw.helpers.sendFunctionTx(this.abi,
                   contractAddress,
                   "setChallenge", [hash, hint],
