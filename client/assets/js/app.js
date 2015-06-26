@@ -30,7 +30,11 @@
 
 
 
-
+  //api
+  angular.module('application')
+    .factory('api', ['$window', 'lw' function(window, lw) {
+      return new lw.blockappsapi.blockappsapi()
+  }]);
 
 
 
@@ -167,7 +171,7 @@
 
     // Challenges Controller
     angular.module('application')
-      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', function(http, rootScope, location, challengeDatum, keystore, lw) {
+      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', 'api', function(http, rootScope, location, challengeDatum, keystore, lw, api) {
         var challenges = this;
         challenges.list = challengeDatum.challenges
         challenges.example = undefined
@@ -186,8 +190,40 @@
           location.path('/challenge/' + address).replace();
         }
 
-        challenges.create = function() {
+        challenges.create = function(name, hint, password) {
+            api.getNonce(rootScope.address, function(_, nonce) {
+                challenges._createContract(nonce, function(_, addr) {
+                    var hash = challenges._sha3(password)
+                    challenges._setChallenge(++nonce, addr, hash, hint)
+                    console.log("Contract address: " + addr)
+                })
+            })
+        }
 
+        challenges._sha3 = function(str) {
+            var hex = CryptoJS.enc.Utf8.parse(str).toString()
+            var len = 64 - hex.length
+            hex = hex + new Array(len+1).join('0')
+            var wordArray = CryptoJS.enc.Hex.parse(hex)
+
+            return CryptoJS.SHA3(wordArray, { outputLength: 256 }).toString(CryptoJS.enc.Latin1)
+        }
+
+        challenge._createContract = function(nonce, callback) {
+            lw.helpers.sendCreateContractTx("60606040525b33600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b6101e6806100406000396000f30060606040526000357c010000000000000000000000000000000000000000000000000000000090048063399e0792146100655780633f696821146100785780635b8b22801461008d578063789237c1146100a2578063dfbf53ae146100bb57610063565b005b61007660048035906020015061018e565b005b6100836004506100e6565b8060005260206000f35b6100986004506100ef565b8060005260206000f35b6100b960048035906020018035906020015061011e565b005b6100c66004506100f8565b8073ffffffffffffffffffffffffffffffffffffffff1660005260206000f35b60016000505481565b60006000505481565b600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156101895781600060005081905550806001600050819055505b5b5050565b60008160405180828152602001915050604051809103902090508060006000505414156101e15733600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b5b505056",
+                rootScope.address,
+                {"nonce": nonce}, api,
+                keystore.instance, keystore.password,
+                callback)
+        }
+
+        challenge._setChallenge = function (nonce, contractAddress, hash, hint) {
+            lw.helpers.sendFunctionTx(this.abi,
+                  contractAddress,
+                  "setChallenge", [hash, hint],
+                  this.address, { "nonce": nonce }, api,
+                  keystore.instance, keystore.password,
+                  function(err, data) { console.log(err, data) })
         }
 
         // return list of of individual values
