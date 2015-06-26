@@ -33,6 +33,15 @@
       return new lw.blockchainapi.blockappsapi()
   }]);
 
+  //abis
+  angular.module('application')
+    .factory('api', ['$window', function(window) {
+        var abi = this
+        abi.challenge = [{"constant":false,"inputs":[{"name":"password","type":"bytes32"}],"name":"check","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"challengeHint","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":true,"inputs":[],"name":"challengeHash","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":true,"inputs":[],"name":"test2","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"hint","type":"bytes32"}],"name":"setChallenge","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"pw","type":"bytes32"}],"name":"gethash","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"winner","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[],"name":"test","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"inputs":[],"type":"constructor"}]
+        abi.challengeList = [{"constant":false,"inputs":[{"name":"creator","type":"address"}],"name":"addCreator","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"challenges","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"creators","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"challenge","type":"address"}],"name":"addChallenge","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"}]
+      return abi
+  }]);
+
 
   // LightWallet KeyStore
   angular.module('application')
@@ -166,7 +175,7 @@
 
     // Challenges Controller
     angular.module('application')
-      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', 'api', function(http, rootScope, location, challengeDatum, keystore, lw, api) {
+      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, location, challengeDatum, keystore, lw, api, abi) {
         var challenges = this;
         challenges.list = challengeDatum.challenges
         challenges.example = undefined
@@ -220,6 +229,7 @@
                     console.log("Contract address: " + addr)
                 })
             })
+            // TODO - add to challengeList
         }
 
         challenges._sha3 = function(str) {
@@ -240,10 +250,10 @@
         }
 
         challenges._setChallenge = function (nonce, contractAddress, hash, hint) {
-            lw.helpers.sendFunctionTx(this.abi,
+            lw.helpers.sendFunctionTx(abi.challenge,
                   contractAddress,
                   "setChallenge", [hash, hint],
-                  this.address, { "nonce": nonce }, api,
+                  rootScope.address, { "nonce": nonce }, api,
                   keystore.instance, keystore.password,
                   function(err, data) { console.log(err, data) })
         }
@@ -265,7 +275,7 @@
 
     // // Challenge Controller
     angular.module('application')
-      .controller('ChallengeCtrlr', ["$http", "$location", '$state', 'challengeDatum', 'keystore', 'lw', function(http, location, state, challengeDatum, keystore, lw) {
+      .controller('ChallengeCtrlr', ["$http", "$location", '$state', 'challengeDatum', 'keystore', 'lw', 'abi', function(http, location, state, challengeDatum, keystore, lw, abi) {
 
         var address = state.params.id;
         var challenge = this;
@@ -282,6 +292,17 @@
             // if false try again message
             challenge.solutionMessage = "You did not get it"
           })
+        }
+
+        challenge._submitAnswer = function(contractAddress, pw) {
+            api.getNonce(this.address, function(_, nonce) {
+                lw.helpers.sendFunctionTx(abi.challenge,
+                      contractAddress,
+                      "check", [pw],
+                      rootScope.address, { "nonce": nonce },
+                      api, keystore.instance, keystore.password,
+                      function(err, data) { console.log(err, data) })
+            })
         }
 
     }]);
