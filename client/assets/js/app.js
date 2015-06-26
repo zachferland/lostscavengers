@@ -247,7 +247,12 @@
                 challenges._createContract(nonce, function(err, addr) {
                     var hash = challenges._sha3(challenges.new.key)
                     window.console.log("Contract address: " + addr + " " + hash)
-                    challenges._setChallenge(++nonce, addr, hash, challenges.new.title, function() {
+                    challenges._setChallenge(++nonce, addr, hash,
+                                             challenges.new.title,
+                                             challenges.new.hint,
+                                             challenges.new.lat,
+                                             challenges.new.lng,
+                                             function() {
                       challenges._addChallenge(++nonce, addr)
                     })
                 })
@@ -272,11 +277,12 @@
                 callback)
         }
 
-        challenges._setChallenge = function (nonce, contractAddress, hash, hint, callback) {
+        challenges._setChallenge = function (nonce, contractAddress, hash,
+                                             title, hint, lat, lng, callback) {
             window.console.log("hash: " + hash + " hint: " + hint)
             lw.helpers.sendFunctionTx(abi.challenge,
                   contractAddress,
-                  "setChallenge", [hash, hint],
+                  "setChallenge", [hash, title, hint, lat, lng],
                   rootScope.address, { "nonce": nonce }, api,
                   keystore.instance, keystore.password,
                   callback)
