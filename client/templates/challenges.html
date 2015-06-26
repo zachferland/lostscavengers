@@ -25,17 +25,18 @@ url: /challenges
         </form>
       </div>
 
-      <p>
+      <!-- <p>
         {{challenges.example}}
-      </p>
+      </p> -->
 
       <div ng-repeat="(key, challenge) in challenges.list" class="item">
-        <h3 >{{challenge.title}}</h3>
+        <div class="type"></div>
+        <a href="" ng-click="challenges.goTo(key)"><h3 >{{challenge.title}}</h3></a>
         <p>{{challenge.description}}</p>
         <p>{{challenge.winner}}</p>
         <p>{{challenge.date}}</p>
         <!-- Address is the key -->
-        [ <a href="" ng-click="challenges.goTo(key)">View Challenge</a> ]
+        <!-- [ <a href="" ng-click="challenges.goTo(key)">View Challenge</a> ] -->
       </div>
 
     </div>

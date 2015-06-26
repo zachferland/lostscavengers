@@ -35,7 +35,7 @@
 
   //abis
   angular.module('application')
-    .factory('api', ['$window', function(window) {
+    .factory('abi', ['$window', function(window) {
         var abi = this
         abi.challenge = [{"constant":false,"inputs":[{"name":"password","type":"bytes32"}],"name":"check","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"challengeHint","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":true,"inputs":[],"name":"challengeHash","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":true,"inputs":[],"name":"test2","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"hint","type":"bytes32"}],"name":"setChallenge","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"pw","type":"bytes32"}],"name":"gethash","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"winner","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[],"name":"test","outputs":[{"name":"","type":"bytes32"}],"type":"function"},{"inputs":[],"type":"constructor"}]
         abi.challengeList = [{"constant":false,"inputs":[{"name":"creator","type":"address"}],"name":"addCreator","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"challenges","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"creators","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"challenge","type":"address"}],"name":"addChallenge","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"}]
@@ -110,14 +110,16 @@
     .factory('challengeDatum', function() {
       var challengeDatum = this
 
-      challengeDatum.challenges = {
-        '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.626936', longitude: '-73.865685'}, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.736936', longitude: '-73.965685'}, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.616936', longitude: '-73.845685'}, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.716936', longitude: '-73.975685'}, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.636936', longitude: '-73.855685'}, date: '6/25/15'},
-        '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.726936', longitude: '-73.955685'}, date: '6/25/15'}
-      }
+
+      challengeDatum.challenges = {}
+      // challengeDatum.challenges = {
+      //   '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.626936', longitude: '-73.865685'}, date: '6/25/15'},
+      //   '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.736936', longitude: '-73.965685'}, date: '6/25/15'},
+      //   '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.616936', longitude: '-73.845685'}, date: '6/25/15'},
+      //   '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.716936', longitude: '-73.975685'}, date: '6/25/15'},
+      //   '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.636936', longitude: '-73.855685'}, date: '6/25/15'},
+      //   '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.726936', longitude: '-73.955685'}, date: '6/25/15'}
+      // }
 
       return challengeDatum
 
@@ -175,7 +177,7 @@
 
     // Challenges Controller
     angular.module('application')
-      .controller('ChallengesCtrlr', ["$http", '$rootScope', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, location, challengeDatum, keystore, lw, api, abi) {
+      .controller('ChallengesCtrlr', ["$http", '$rootScope', '$window', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, window, location, challengeDatum, keystore, lw, api, abi) {
         var challenges = this;
         challenges.list = challengeDatum.challenges
         challenges.example = undefined
@@ -186,7 +188,7 @@
         var init = function() {
 
           // Get address of every challenge contract from registry contract
-          challenges.address = '70e89ffe227dc02db70024b29ad7e16a00111ff9'
+          challenges.address = '36f07edb71fac9079d403015c712dc76e44d2895'
           http.get('http://stablenet.blockapps.net/query/storage?address=' + challenges.address, {cache: true })
           .success(function(data) {
             challenges.example = data
@@ -199,16 +201,32 @@
             });
 
             // Now get data for every challenge
-            // challenges.addressList.forEach(function(address) {
-            //   http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
-            //   .success(function(data) {
-            //     // parse here and a
-            //
-            //   });
-            //
-            // });
-            //
-            // challenges.example = challenges.addressList
+            challenges.addressList.forEach(function(address) {
+              http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: true })
+              .success(function(data) {
+
+                window.console.log(data)
+
+                var winner = 'none'
+                if (data[2].key.slice(-1) === 2) {
+                  winner = data[2].value.substring(24)
+                }
+
+                //  '99de3950a971bb26461477e333e75fdca7f44d34':
+                // parse here and a
+                challengeDatum.challenges[address] = {title: challenges._hexstrToStr(data[1].value),
+                description: "There exists and a place with not light and a message",
+                winner: winner,
+                coords: {latitude: '40.626936', longitude: '-73.865685'},
+                date: '6/25/15'}
+
+                // challenges.list = challengeDatum.challenges
+
+              });
+
+            });
+
+            challenges.example = challenges.addressList
 
           })
 
@@ -258,13 +276,17 @@
                   function(err, data) { console.log(err, data) })
         }
 
-        callenges._addChallenge = function (nonce, challengeAddress) {
+        challenges._addChallenge = function (nonce, challengeAddress) {
             this.lw.helpers.sendFunctionTx(abi.challengeList,
                   challenges.address,
                   "addChallenge", ["0x" + challengeAddress],
                   rootScope.address, { "nonce": nonce },
                   api, keystore.instance, keystore.password,
                   function(err, data) { console.log(err, data) })
+        }
+
+        challenges._hexstrToStr = function(hex) {
+            return CryptoJS.enc.Hex.parse(hex).toString(CryptoJS.enc.Utf8).replace(/\u0000/g, "")
         }
 
         // return list of of individual values
@@ -312,10 +334,6 @@
                       api, keystore.instance, keystore.password,
                       function(err, data) { console.log(err, data) })
             })
-        }
-
-        challenge._hexstrToStr = function(hex) {
-            return CryptoJS.enc.Hex.parse(hex).toString(CryptoJS.enc.Utf8).replace(/\u0000/g, "")
         }
 
     }]);
