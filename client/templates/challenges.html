@@ -5,26 +5,21 @@ animationIn: slideInLeft
 ---
 
 <div class="challenges">
-  <h2>  Start a Challenge  </h2>
 
   <div ng-controller="ChallengesCtrlr as challenges">
 
     <div class="sidebar">
+
+      <h2 class="page-title">  Nearby Challenges  </h2>
       <div class="addChallenge">
 
-        <h5>Create new challenge</h5>
+        <h5>Create new challenge at [ <span>{{map.lat}} {{map.long}}</span>]</h5>
         <form ng-submit="challenges.create()">
           <input type="text" ng-model="challenges.new.title"  size="30" placeholder="Enter title">
           <input type="text" ng-model="challenges.new.hint"  size="30" placeholder="Enter description or hint">
           <input type="text" ng-model="challenges.new.key"  size="30" placeholder="Enter your secret key">
-          <!-- <input type="text" ng-model="challenges.new.message"  size="30" placeholder="Enter your secret message"> -->
-          <!--Ideally choose you location on a map  -->
-          <!-- <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter Long">
-          <input type="text" ng-model="challenges.new.long"  size="30" placeholder="Enter lat"> -->
-          {{map.lat}}
-          {{map.long}}
           <!--autotmatically append date when it is sent  -->
-          <input class="btn-primary" type="submit" value="Create">
+          <input id="button-email-2" class="btn" type="submit" value="Create">
         </form>
       </div>
 
@@ -38,7 +33,7 @@ animationIn: slideInLeft
         <div class="text">
           <a href="" ng-click="challenges.goTo(key)"><h3 class='title'>{{challenge.title}}</h3></a>
           <p class='description'>{{challenge.description}}</p>
-          <p class ='winner'>{{challenge.winner}}</p>
+          <p class ='winner'>Winner: {{challenge.winner}}</p>
           <p class='date'>{{challenge.date}}</p>
         </div>
         <!-- Address is the key -->
@@ -51,9 +46,9 @@ animationIn: slideInLeft
 
 
     <div class="right">
-      <div class="map_canvas">
+      <div class="map_canvas" style="height: {{$window.height}}">
         <!-- map.center -->
-        <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" events='map.events' on-click='addPosClick()'>
+        <ui-gmap-google-map style="height: {{$window.height}}" center="map.center" zoom="map.zoom" draggable="true" options="options" events='map.events' on-click='addPosClick()'>
             <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
             <ui-gmap-marker ng-repeat="(key, challenge) in challenges.list" coords="challenge.coords" idkey="key"></ui-gmap-marker>
             <!-- </div> -->

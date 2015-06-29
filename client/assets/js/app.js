@@ -198,6 +198,8 @@
 
           // Create Map
           rootScope.map = {
+            long: " click on map ",
+            lat: '',
             center: {
               latitude: 40.7157774,
               longitude: -73.961849
