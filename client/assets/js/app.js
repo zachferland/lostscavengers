@@ -178,6 +178,32 @@
 
 
 
+    angular.module('application')
+      .controller('CreatorCtrlr', ["$http", '$rootScope', '$window', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, window, location, challengeDatum, keystore, lw, api, abi) {
+        var creator = this;
+
+        creator.address = '66233da500a04ab480d563dd226d41be7e89ca4a'
+
+        creator.addCreator = function() {
+            // window.console.log(rootScope.address)
+            api.getNonce(rootScope.address, function(_, nonce) {
+                window.console.log(nonce)
+                creator._addCreator(nonce, creator.newAddress)
+            })
+        }
+
+        creator._addCreator = function (nonce, address) {
+            window.console.log("adding creator: " + address)
+            lw.helpers.sendFunctionTx(abi.challengeList,
+                  creator.address,
+                  "addCreator", ['0x' + address],
+                  rootScope.address, { "nonce": nonce }, api,
+                  keystore.instance, keystore.password,
+                  function(err, data) {
+                      console.log(err, data)
+                  })
+        }
+      }])
 
 
 

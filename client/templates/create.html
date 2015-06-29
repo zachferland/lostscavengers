@@ -1,0 +1,25 @@
+---
+name: create
+url: /create
+animationIn: slideInLeft
+---
+
+
+
+<div class="challenge" ng-controller="CreatorCtrlr as creator">
+
+  <div class="grid-container row">
+
+    <h2 class='title'>Add new creator</h2>
+    <p class='description'>Allow the inputed address to create new challenges.</p>
+
+    <div class="large-8">
+
+      <form ng-submit="creator.addCreator()">
+
+        <input type="text" ng-model="creator.newAddress" size="30" placeholder="Enter address">
+        <input class="btn-primary" type="submit" value="Enter">
+      </form>
+    </div>
+  </div>
+  </div>
