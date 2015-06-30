@@ -185,7 +185,7 @@
         creator.address = '66233da500a04ab480d563dd226d41be7e89ca4a'
 
         creator.addCreator = function() {
-            // window.console.log(rootScope.address)
+             //window.console.log(rootScope.address)
             api.getNonce(rootScope.address, function(_, nonce) {
                 window.console.log(nonce)
                 creator._addCreator(nonce, creator.newAddress)
@@ -201,7 +201,65 @@
                   keystore.instance, keystore.password,
                   function(err, data) {
                       console.log(err, data)
-                  })
+                  }
+            )
+        }
+
+        creator.createChallenge = function() {
+            //window.console.log('hello')
+             window.console.log(rootScope.address)
+            api.getNonce(rootScope.address, function(_, nonce) {
+                window.console.log(nonce)
+                creator._createContract(nonce, function(err, addr) {
+                    var hash = creator._sha3(creator.new.key)
+                    window.console.log("Contract address: " + addr + " " + hash)
+                    creator._setChallenge(++nonce, addr, hash,
+                                             creator.new.title,
+                                             creator.new.hint,
+                                             rootScope.map.lat.toString(),
+                                             rootScope.map.long.toString(),
+                                             function() {
+                      creator._addChallenge(++nonce, addr)
+                    })
+                })
+            })
+        }
+
+        creator._sha3 = function(str) {
+            var hex = CryptoJS.enc.Utf8.parse(str).toString()
+            var len = 64 - hex.length
+            hex = hex + new Array(len+1).join('0')
+            var wordArray = CryptoJS.enc.Hex.parse(hex)
+
+            return CryptoJS.SHA3(wordArray, { outputLength: 256 }).toString(CryptoJS.enc.Latin1)
+        }
+
+        creator._createContract = function(nonce, callback) {
+            lw.helpers.sendCreateContractTx("60606040525b33600560006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b61029a806100406000396000f3006060604052361561008a576000357c010000000000000000000000000000000000000000000000000000000090048063015e72ec1461008c57806309bd5a60146100a1578063399e0792146100b65780634a79d50c146100c957806355d576cc146100de5780636aefb2d0146100f3578063dfbf53ae1461011e578063fbf552db146101495761008a565b005b61009760045061015e565b8060005260206000f35b6100ac6004506101a8565b8060005260206000f35b6100c7600480359060200150610242565b005b6100d4600450610196565b8060005260206000f35b6100e960045061018d565b8060005260206000f35b61011c6004803590602001803590602001803590602001803590602001803590602001506101b1565b005b610129600450610167565b8073ffffffffffffffffffffffffffffffffffffffff1660005260206000f35b61015460045061019f565b8060005260206000f35b60046000505481565b600660009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60036000505481565b60016000505481565b60026000505481565b60006000505481565b600560009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561023a5784600060005081905550836001600050819055508260026000508190555081600360005081905550806004600050819055505b5b5050505050565b60008160405180828152602001915050604051809103902090508060006000505414156102955733600660006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b5b505056",
+                rootScope.address,
+                {"nonce": nonce}, api,
+                keystore.instance, keystore.password,
+                callback)
+        }
+
+        creator._setChallenge = function (nonce, contractAddress, hash,
+                                             title, hint, lat, lng, callback) {
+            window.console.log("hash: " + hash + " hint: " + hint)
+            lw.helpers.sendFunctionTx(abi.challenge,
+                  contractAddress,
+                  "setChallenge", [hash, title, hint, lat, lng],
+                  rootScope.address, { "nonce": nonce }, api,
+                  keystore.instance, keystore.password,
+                  callback)
+        }
+
+        creator._addChallenge = function (nonce, challengeAddress) {
+            lw.helpers.sendFunctionTx(abi.challengeList,
+                  creator.address,
+                  "addChallenge", ["0x" + challengeAddress],
+                  rootScope.address, { "nonce": nonce },
+                  api, keystore.instance, keystore.password,
+                  function(err, data) { console.log(err, data) })
         }
       }])
 
@@ -220,7 +278,6 @@
         rootScope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
 
         var init = function() {
-
 
           // Create Map
           rootScope.map = {
@@ -258,8 +315,6 @@
               http.get('http://stablenet.blockapps.net/query/storage?address=' + address, {cache: false })
               .success(function(data) {
 
-                window.console.log(data)
-
                 var winner = 'none'
                 if (data[6]) {
                   winner = data[6].value.substring(24)
@@ -280,78 +335,15 @@
             });
 
             challenges.example = challenges.addressList
-
           })
-
-
-
-
-        }
-
-        challenges.goTo = function(address){
-          location.path('/challenge/' + address).replace();
-        }
-
-        challenges.create = function() {
-            window.console.log('hello')
-            // window.console.log(rootScope.address)
-            api.getNonce(rootScope.address, function(_, nonce) {
-                window.console.log(nonce)
-                challenges._createContract(nonce, function(err, addr) {
-                    var hash = challenges._sha3(challenges.new.key)
-                    window.console.log("Contract address: " + addr + " " + hash)
-                    challenges._setChallenge(++nonce, addr, hash,
-                                             challenges.new.title,
-                                             challenges.new.hint,
-                                             rootScope.map.lat.toString(),
-                                             rootScope.map.long.toString(),
-                                             function() {
-                      challenges._addChallenge(++nonce, addr)
-                    })
-                })
-            })
-            // TODO - add to challengeList
-        }
-
-        challenges._sha3 = function(str) {
-            var hex = CryptoJS.enc.Utf8.parse(str).toString()
-            var len = 64 - hex.length
-            hex = hex + new Array(len+1).join('0')
-            var wordArray = CryptoJS.enc.Hex.parse(hex)
-
-            return CryptoJS.SHA3(wordArray, { outputLength: 256 }).toString(CryptoJS.enc.Latin1)
-        }
-
-        challenges._createContract = function(nonce, callback) {
-            lw.helpers.sendCreateContractTx("60606040525b33600560006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b61029a806100406000396000f3006060604052361561008a576000357c010000000000000000000000000000000000000000000000000000000090048063015e72ec1461008c57806309bd5a60146100a1578063399e0792146100b65780634a79d50c146100c957806355d576cc146100de5780636aefb2d0146100f3578063dfbf53ae1461011e578063fbf552db146101495761008a565b005b61009760045061015e565b8060005260206000f35b6100ac6004506101a8565b8060005260206000f35b6100c7600480359060200150610242565b005b6100d4600450610196565b8060005260206000f35b6100e960045061018d565b8060005260206000f35b61011c6004803590602001803590602001803590602001803590602001803590602001506101b1565b005b610129600450610167565b8073ffffffffffffffffffffffffffffffffffffffff1660005260206000f35b61015460045061019f565b8060005260206000f35b60046000505481565b600660009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60036000505481565b60016000505481565b60026000505481565b60006000505481565b600560009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561023a5784600060005081905550836001600050819055508260026000508190555081600360005081905550806004600050819055505b5b5050505050565b60008160405180828152602001915050604051809103902090508060006000505414156102955733600660006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b5b505056",
-                rootScope.address,
-                {"nonce": nonce}, api,
-                keystore.instance, keystore.password,
-                callback)
-        }
-
-        challenges._setChallenge = function (nonce, contractAddress, hash,
-                                             title, hint, lat, lng, callback) {
-            window.console.log("hash: " + hash + " hint: " + hint)
-            lw.helpers.sendFunctionTx(abi.challenge,
-                  contractAddress,
-                  "setChallenge", [hash, title, hint, lat, lng],
-                  rootScope.address, { "nonce": nonce }, api,
-                  keystore.instance, keystore.password,
-                  callback)
-        }
-
-        challenges._addChallenge = function (nonce, challengeAddress) {
-            lw.helpers.sendFunctionTx(abi.challengeList,
-                  challenges.address,
-                  "addChallenge", ["0x" + challengeAddress],
-                  rootScope.address, { "nonce": nonce },
-                  api, keystore.instance, keystore.password,
-                  function(err, data) { console.log(err, data) })
         }
 
         challenges._hexstrToStr = function(hex) {
             return CryptoJS.enc.Hex.parse(hex).toString(CryptoJS.enc.Utf8).replace(/\u0000/g, "")
+        }
+
+        challenges.goTo = function(address){
+          location.path('/challenge/' + address).replace();
         }
 
         // return list of of individual values

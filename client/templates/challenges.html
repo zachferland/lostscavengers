@@ -11,21 +11,6 @@ animationIn: slideInLeft
     <div class="sidebar">
 
       <h2 class="page-title">  Nearby Challenges  </h2>
-      <div class="addChallenge">
-
-        <h5>Create new challenge at [ <span>{{map.lat}} {{map.long}}</span>]</h5>
-        <form ng-submit="challenges.create()">
-          <input type="text" ng-model="challenges.new.title"  size="30" placeholder="Enter title">
-          <input type="text" ng-model="challenges.new.hint"  size="30" placeholder="Enter description or hint">
-          <input type="text" ng-model="challenges.new.key"  size="30" placeholder="Enter your secret key">
-          <!--autotmatically append date when it is sent  -->
-          <input id="button-email-2" class="btn" type="submit" value="Create">
-        </form>
-      </div>
-
-      <!-- <p>
-        {{challenges.example}}
-      </p> -->
 
       <div ng-repeat="(key, challenge) in challenges.list" class="item">
         <div class="type"><img src="../assets/images/cache.png" alt="" /></div>

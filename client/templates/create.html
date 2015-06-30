@@ -6,20 +6,50 @@ animationIn: slideInLeft
 
 
 
-<div class="challenge" ng-controller="CreatorCtrlr as creator">
+<div class="challenges" ng-controller="CreatorCtrlr as creator">
 
-  <div class="grid-container row">
 
-    <h2 class='title'>Add new creator</h2>
-    <p class='description'>Allow the inputed address to create new challenges.</p>
+    <div class="sidebar">
 
-    <div class="large-8">
+      <div class="addChallenge">
 
-      <form ng-submit="creator.addCreator()">
+        <h5>Create new challenge at [ <span>{{map.lat}} {{map.long}}</span>]</h5>
+        <form ng-submit="creator.createChallenge()">
+          <input type="text" ng-model="creator.new.title"  size="30" placeholder="Enter title">
+          <input type="text" ng-model="creator.new.hint"  size="30" placeholder="Enter description or hint">
+          <input type="text" ng-model="creator.new.key"  size="30" placeholder="Enter your secret key">
+          <!--autotmatically append date when it is sent  -->
+          <input id="button-email-2" class="btn" type="submit" value="Create">
+        </form>
+      </div>
 
-        <input type="text" ng-model="creator.newAddress" size="30" placeholder="Enter address">
-        <input class="btn-primary" type="submit" value="Enter">
-      </form>
+      <div>
+        <h5 class='title'>Add new creator</h5>
+        <p class='description'>Allow the inputed address to create new challenges.</p>
+
+        <div class="large-8">
+
+          <form ng-submit="creator.addCreator()">
+
+            <input type="text" ng-model="creator.newAddress" size="30" placeholder="Enter address">
+            <input class="btn-primary" type="submit" value="Add">
+          </form>
+        </div>
+      </div>
+
     </div>
-  </div>
-  </div>
+
+
+    <div class="right">
+      <div class="map_canvas" style="height: {{$window.height}}">
+        <!-- map.center -->
+        <ui-gmap-google-map style="height: {{$window.height}}" center="map.center" zoom="map.zoom" draggable="true" options="options" events='map.events' on-click='addPosClick()'>
+            <!-- <div ng-repeat="(key, challenge) in challenges.list"> -->
+            <ui-gmap-marker ng-repeat="(key, challenge) in challenges.list" coords="challenge.coords" idkey="key"></ui-gmap-marker>
+            <!-- </div> -->
+          </ui-gmap-google-map>
+      </div>
+    </div>
+
+</div>
+
