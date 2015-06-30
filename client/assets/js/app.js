@@ -15,17 +15,11 @@
     .run(run)
   ;
 
-
-  // Services -------------------------------------------------
-
-
-
-  //LightWallet (don't really have to do this )
+// Services -------------------------------------------------
   angular.module('application')
     .factory('lw', ['$window', function(window) {
       return window.ethlightjs
   }]);
-
 
   //api
   angular.module('application')
@@ -100,38 +94,16 @@
   }]);
 
 
-
-
-
-
-
-  //LightWallet (don't really have to do this )
   angular.module('application')
     .factory('challengeDatum', function() {
       var challengeDatum = this
 
-
       challengeDatum.challenges = {}
-      // challengeDatum.challenges = {
-      //   '99de3950a971bb26461477e333e75fdca7f44d34': { title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.626936', longitude: '-73.865685'}, date: '6/25/15'},
-      //   '99de3950a971bb26461477e333e75fdca7f44d35': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.736936', longitude: '-73.965685'}, date: '6/25/15'},
-      //   '99de3950a971bb26461477e333e75fdca7f44d36': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.616936', longitude: '-73.845685'}, date: '6/25/15'},
-      //   '99de3950a971bb26461477e333e75fdca7f44d37': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.716936', longitude: '-73.975685'}, date: '6/25/15'},
-      //   '99de3950a971bb26461477e333e75fdca7f44d38': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.636936', longitude: '-73.855685'}, date: '6/25/15'},
-      //   '99de3950a971bb26461477e333e75fdca7f44d39': {  title: "The Lost Scavengers", description: "There exists and a place with not light and a message", winner: undefined, coords: {latitude: '40.726936', longitude: '-73.955685'}, date: '6/25/15'}
-      // }
 
       return challengeDatum
-
   });
 
-
-
-
-
-
-
-  // Modules ------------------------------------------------
+// Modules ------------------------------------------------
 
   //Index module to allow address selection for testing
   angular.module('application')
@@ -141,12 +113,7 @@
       index.login = function () {
         location.path('/login').replace();
       }
-
-
-      // <form ng-submit="index.login()">
-
   }]);
-
 
 
   // Login module
@@ -175,7 +142,6 @@
 
       init()
     }]);
-
 
 
     angular.module('application')
@@ -264,9 +230,6 @@
       }])
 
 
-
-
-
     // Challenges Controller
     angular.module('application')
       .controller('ChallengesCtrlr', ["$http", '$rootScope', '$window', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, window, location, challengeDatum, keystore, lw, api, abi) {
@@ -294,7 +257,6 @@
                 rootScope.map.long = originalEventArgs[0].latLng.F
               }
             }
-
           };
 
           // Get address of every challenge contract from registry contract
@@ -331,7 +293,6 @@
 
                 // challenges.list = challengeDatum.challenges
               });
-
             });
 
             challenges.example = challenges.addressList
@@ -356,12 +317,7 @@
       }]);
 
 
-
-
-
-
-
-    // // Challenge Controller
+    // Challenge Controller
     angular.module('application')
       .controller('ChallengeCtrlr', ["$http", "$location", '$rootScope', '$window', '$state', 'challengeDatum', 'keystore', 'lw', 'abi', 'api', function(http, location, rootScope, window, state, challengeDatum, keystore, lw, abi, api) {
 
@@ -399,55 +355,7 @@
                       function(err, data) { window.console.log(err, data) })
             })
         }
-
     }]);
-
-
-
-
-
-
-
-
-
-  // Example modules
-  angular.module('application')
-    .controller('TodoListController', function() {
-      var todoList = this;
-      todoList.todos = [
-        {text:'learn angular', done:true},
-        {text:'build an angular app', done:false}];
-
-      todoList.addTodo = function() {
-        todoList.todos.push({text:todoList.todoText, done:false});
-        todoList.todoText = '';
-      };
-
-      todoList.remaining = function() {
-        var count = 0;
-        angular.forEach(todoList.todos, function(todo) {
-          count += todo.done ? 0 : 1;
-        });
-        return count;
-      };
-
-      todoList.archive = function() {
-        var oldTodos = todoList.todos;
-        todoList.todos = [];
-        angular.forEach(oldTodos, function(todo) {
-          if (!todo.done) todoList.todos.push(todo);
-        });
-      };
-    });
-
-
-
-
-
-
-
-
-
 
 
   config.$inject = ['$urlRouterProvider', '$locationProvider'];
