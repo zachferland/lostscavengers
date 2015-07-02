@@ -9,7 +9,10 @@ animationIn: slideInLeft
 <div class="challenges" ng-controller="CreatorCtrlr as creator">
 
 
-    <div class="sidebar">
+    <div class="sidebar" ng-show="!creator.isCreator">
+        <p class='description'>You need to be invited by another creator to be able to create a new challenge.</p>
+    </div>
+    <div class="sidebar" ng-show="creator.isCreator">
 
       <div class="addChallenge">
 

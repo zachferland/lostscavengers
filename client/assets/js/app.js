@@ -148,7 +148,34 @@
       .controller('CreatorCtrlr', ["$http", '$rootScope', '$window', "$location", 'challengeDatum', 'keystore', 'lw', 'api', 'abi', function(http, rootScope, window, location, challengeDatum, keystore, lw, api, abi) {
         var creator = this;
 
+        creator.isCreator = false
         creator.address = '66233da500a04ab480d563dd226d41be7e89ca4a'
+
+        creator._getUserKey = function(key) {
+            var len = 65 - key.length
+            key = new Array(len).join('0') + key
+            var index = '0000000000000000000000000000000000000000000000000000000000000002'
+            var words = CryptoJS.enc.Hex.parse(key.concat(index));
+            return CryptoJS.SHA3(words, { outputLength: 256}).toString(CryptoJS.enc.Hex);
+        }
+
+        rootScope.$watch("address", function() {
+            creator.checkUser()
+        })
+
+        creator.checkUser = function() {
+            http.get('http://stablenet.blockapps.net/query/storage?address=' + creator.address, {cache: false })
+              .success(function(data) {
+
+                creator.isCreator = false
+                var key = creator._getUserKey(rootScope.address)
+                data.forEach(function(entry) {
+                    if (entry.key === key){
+                        creator.isCreator = true;
+                    }
+                });
+            })
+        }
 
         creator.addCreator = function() {
              //window.console.log(rootScope.address)
