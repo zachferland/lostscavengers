@@ -334,6 +334,27 @@
           location.path('/challenge/' + address).replace();
         }
 
+        challenges.filter = function(items) {
+            var result = {};
+            angular.forEach(items, function(value, key) {
+                if (challenges.filterWinner(value)) {
+                    result[key] = value
+                }
+            })
+            console.log(challenges.winnerFilter)
+            return result
+        }
+
+        challenges.filterWinner = function(value) {
+            switch(challenges.winnerFilter) {
+                case "open":
+                    return value.winner === 'none'
+                case "done":
+                    return value.winner !== 'none'
+            }
+            return true;
+        }
+
         // return list of of individual values
         // var parse = function(jsonHex) {
         //   return jsonHex
@@ -342,7 +363,6 @@
 
         init()
       }]);
-
 
     // Challenge Controller
     angular.module('application')

@@ -10,9 +10,14 @@ animationIn: slideInLeft
 
     <div class="sidebar">
 
+        <select ng-model="challenges.winnerFilter">
+            <option value="-">Filter by status</option>
+            <option value="open">Open challenges</option>
+            <option value="done">Finished challenges</option>
+        </select>
       <h2 class="page-title">  Nearby Challenges  </h2>
 
-      <div ng-repeat="(key, challenge) in challenges.list" class="item">
+      <div ng-repeat="(key, challenge) in challenges.filter(challenges.list)" class="item">
         <div class="type"><img src="assets/images/cache.png" alt="" /></div>
 
         <div class="text">
