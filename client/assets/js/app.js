@@ -316,6 +316,7 @@
                 winner: winner,
                 coords: {latitude: challenges._hexstrToStr(data[3].value),
                         longitude: challenges._hexstrToStr(data[4].value)},
+                owner: data[5].value.substring(24),
                 date: '6/25/15'}
 
                 // challenges.list = challengeDatum.challenges
@@ -337,13 +338,19 @@
         challenges.filter = function(items) {
             var result = {};
             angular.forEach(items, function(value, key) {
-                if (challenges.filterWinner(value)) {
+                if (challenges.filterWinner(value) &&
+                    challenges.filterSolvedByYou(value) &&
+                    challenges.filterCreatedByYou(value)) {
                     result[key] = value
                 }
             })
-            console.log(challenges.winnerFilter)
+            console.log(challenges.solvedByYouFilter)
             return result
         }
+
+        challenges.solvedByYouFilter = false
+        challenges.createdByYouFilter = false
+        challenges.winnerFilter = "-"
 
         challenges.filterWinner = function(value) {
             switch(challenges.winnerFilter) {
@@ -353,6 +360,20 @@
                     return value.winner !== 'none'
             }
             return true;
+        }
+
+        challenges.filterSolvedByYou = function(value) {
+            if (challenges.solvedByYouFilter) {
+                return value.winner === rootScope.address
+            }
+            return true
+        }
+
+        challenges.filterCreatedByYou = function(value) {
+            if (challenges.createdByYouFilter) {
+                return value.owner === rootScope.address
+            }
+            return true
         }
 
         // return list of of individual values
